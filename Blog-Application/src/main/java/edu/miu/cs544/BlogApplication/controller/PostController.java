@@ -10,7 +10,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/posts")
+@RequestMapping("/api/posts")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -18,7 +18,7 @@ public class PostController {
     @PostMapping("")
     public RedirectView save(@RequestBody Post post) {
         long savedPostId = postService.save(post);
-        return new RedirectView("api/v1/posts/" + savedPostId);
+        return new RedirectView("api/posts/" + savedPostId);
     }
 
     @GetMapping("")
@@ -39,7 +39,7 @@ public class PostController {
 
         post.setId(id);
         postService.update(post);
-
+//        return new RedirectView("api/posts/" + id);
         return ResponseEntity.accepted().body("Post has successfully updated");
     }
 

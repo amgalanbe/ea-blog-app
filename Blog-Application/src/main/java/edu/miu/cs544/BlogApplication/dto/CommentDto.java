@@ -5,7 +5,7 @@ import edu.miu.cs544.BlogApplication.entity.User;
 
 import java.util.Date;
 
-public class CommentDTO {
+public class CommentDto {
     private Long id;
     private String body;
     private Date publishedDate;

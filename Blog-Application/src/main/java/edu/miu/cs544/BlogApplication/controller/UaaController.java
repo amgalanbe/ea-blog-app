@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/uaa")
+@RequestMapping("/api/uaa")
 public class UaaController {
     private final UaaService uaaService;
 

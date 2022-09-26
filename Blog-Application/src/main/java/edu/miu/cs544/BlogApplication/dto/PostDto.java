@@ -6,7 +6,7 @@ import edu.miu.cs544.BlogApplication.entity.User;
 import java.util.Collection;
 import java.util.Date;
 
-public class PostDTO {
+public class PostDto {
     private Long id;
     private String title;
     private String body;

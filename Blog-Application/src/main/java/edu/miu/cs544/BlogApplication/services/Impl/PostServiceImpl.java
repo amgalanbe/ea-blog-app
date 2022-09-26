@@ -20,13 +20,16 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
     private RestTemplate restTemplate;
+    private long next = 6;
     private final String post_url = "http://localhost:8081/posts";
     @Override
     public long save(Post post) {
-        Long newId = new Random().nextLong(); // Id generator service needed
+        Long newId = next++;
         post.setId(newId);
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY, new ServiceRequest("Post", "create", post, 1L));
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+                new ServiceRequest("Post", "create", post, UaaServiceImpl.currentUser.getId()));
         return newId;
     }
 
@@ -38,18 +41,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post findById(long id) {
-        return restTemplate.getForObject(post_url + "{id}", Post.class, id);
+        return restTemplate.getForObject(post_url + "/{id}", Post.class, id);
     }
 
 
     @Override
     public void update(Post post) {
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY, new ServiceRequest("Post", "udpate", post, 1L));
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+                new ServiceRequest("Post", "udpate", post, UaaServiceImpl.currentUser.getId()));
     }
 
     @Override
     public void deleteById(long id) {
-
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY, new ServiceRequest("Post", "delete", id, 1L));
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+                new ServiceRequest("Post", "delete", id, UaaServiceImpl.currentUser.getId()));
     }
 }

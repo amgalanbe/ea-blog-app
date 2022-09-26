@@ -2,13 +2,16 @@ package edu.miu.cs544.BlogApplication.services.Impl;
 
 import edu.miu.cs544.BlogApplication.dao.IRoleDAO;
 import edu.miu.cs544.BlogApplication.dao.IUserDAO;
+import edu.miu.cs544.BlogApplication.dto.UserDto;
 import edu.miu.cs544.BlogApplication.entity.User;
 import edu.miu.cs544.BlogApplication.model.LoginRequest;
 import edu.miu.cs544.BlogApplication.model.LoginResponse;
+import edu.miu.cs544.BlogApplication.model.SignupResponse;
 import edu.miu.cs544.BlogApplication.security.JwtHelper;
 import edu.miu.cs544.BlogApplication.services.UaaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +26,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Slf4j
 public class UaaServiceImpl implements UaaService {
+
+    public static User currentUser = null;
     @Autowired
     private final AuthenticationManager authenticationManager;
     @Autowired
@@ -33,6 +38,9 @@ public class UaaServiceImpl implements UaaService {
     private final IRoleDAO roleDAO;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -50,12 +58,17 @@ public class UaaServiceImpl implements UaaService {
     }
 
     @Override
-    public User signup(User user) {
-        //check if username exist or not
-        //send success or request fail message
+    public SignupResponse signup(User user) {
+        User existingUser = userDAO.findByUsername(user.getUsername()).orElse(null);
+
+        if(existingUser != null)
+            return new SignupResponse("User with this username already exists", null) ;
+
+        UaaServiceImpl.currentUser = user;
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Arrays.asList(roleDAO.findByRole("USER")));
         userDAO.save(user);
-        return user;
+
+        return new SignupResponse("Successfully signed up", modelMapper.map(user, UserDto.class));
     }
 }

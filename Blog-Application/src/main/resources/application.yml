@@ -19,7 +19,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
         format_sql: true
     show-sql: false
-    defer-datasource-initialization: false
+    defer-datasource-initialization: true
 logging:
   level:
     root: warn
