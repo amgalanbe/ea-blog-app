@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MessagingConfig {
-    public static final String QUEUE = "BlogQueue";
-    public static final String EXCHANGE = "BlogExchange";
-    public static final String ROUTING_KEY = "BlogRouting";
+    public static final String QUEUE = "user-queue";
+    public static final String EXCHANGE = "blog-exchange";
+    public static final String ROUTING_KEY = "user-routing";
 
     @Bean
     public Queue getQueue() {
