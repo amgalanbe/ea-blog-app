@@ -46,12 +46,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User user) {
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("User", "update", user, UaaServiceImpl.currentUser.getId()));
+                new ServiceRequest("User", "update", user));
     }
 
     @Override
     public void deleteById(long id) {
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("User", "delete", id, UaaServiceImpl.currentUser.getId()));
+                new ServiceRequest("User", "delete", id));
     }
 }

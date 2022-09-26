@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,7 +31,7 @@ public class PostServiceImpl implements PostService {
         Long newId = next++;
         post.setId(newId);
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("Post", "create", post, UaaServiceImpl.currentUser.getId()));
+                new ServiceRequest("Post", "create", post));
         return newId;
     }
 
@@ -47,13 +49,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post) {
+        post.setUser(UaaServiceImpl.currentUser);
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("Post", "udpate", post, UaaServiceImpl.currentUser.getId()));
+                new ServiceRequest("Post", "udpate", post));
     }
 
     @Override
     public void deleteById(long id) {
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("Post", "delete", id, UaaServiceImpl.currentUser.getId()));
+                new ServiceRequest("Post", "delete", id));
     }
 }

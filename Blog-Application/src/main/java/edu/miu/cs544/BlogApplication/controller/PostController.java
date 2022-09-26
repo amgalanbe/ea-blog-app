@@ -1,6 +1,7 @@
 package edu.miu.cs544.BlogApplication.controller;
 
 import edu.miu.cs544.BlogApplication.entity.Post;
+import edu.miu.cs544.BlogApplication.services.Impl.UaaServiceImpl;
 import edu.miu.cs544.BlogApplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,12 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable long id, @RequestBody Post post) {
 
-        if(postService.findById(id) == null)
+        Post existingPost = postService.findById(id);
+        if(existingPost == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
+
+        if(existingPost.getUser().getId() != UaaServiceImpl.currentUser.getId())
+            return ResponseEntity.accepted().body("User is not authorized to update a post with Id: " + id);
 
         post.setId(id);
         postService.update(post);
@@ -45,11 +50,14 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
-        if(postService.findById(id) == null)
+        Post post = postService.findById(id);
+        if(post == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
 
-        postService.deleteById(id);
+        if(post.getUser().getId() != UaaServiceImpl.currentUser.getId())
+            return ResponseEntity.accepted().body("User is not authorized to delete a post with Id: " + id);
 
+        postService.deleteById(id);
         return ResponseEntity.accepted().body("Post has successfully deleted");
     }
 }
