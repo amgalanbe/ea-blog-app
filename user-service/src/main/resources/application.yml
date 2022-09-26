@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: user-service
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    port: 5672
+  datasource:
+    url: jdbc:mysql://localhost:3306/cs544?useSSL=false
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
+    show-sql: false
+    defer-datasource-initialization: false
+logging:
+  level:
+    root: warn
+server:
+  port: 8083
