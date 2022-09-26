@@ -27,7 +27,7 @@ public class PostServiceImpl implements PostService {
     public long save(Post post) {
         Long newId = next++;
         post.setId(newId);
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.POST_ROUTING_KEY,
                 new ServiceRequest("Post", "create", post));
         return newId;
     }
@@ -46,13 +46,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post) {
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.POST_ROUTING_KEY,
                 new ServiceRequest("Post", "udpate", post));
     }
 
     @Override
     public void deleteById(long id) {
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.POST_ROUTING_KEY,
                 new ServiceRequest("Post", "delete", id));
     }
 }

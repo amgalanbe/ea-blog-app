@@ -1,9 +1,11 @@
 package edu.miu.cs544.BlogApplication.services.Impl;
 
 import edu.miu.cs544.BlogApplication.config.MessagingConfig;
+import edu.miu.cs544.BlogApplication.dao.IUserDAO;
 import edu.miu.cs544.BlogApplication.dto.UserDto;
 import edu.miu.cs544.BlogApplication.entity.User;
 import edu.miu.cs544.BlogApplication.model.ServiceRequest;
+import edu.miu.cs544.BlogApplication.model.SignupResponse;
 import edu.miu.cs544.BlogApplication.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -27,7 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RestTemplate restTemplate;
-
+    @Autowired
+    private IUserDAO userDAO;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -36,10 +39,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long save(User user) {
+
+        User existingUser = userDAO.findByUsername(user.getUsername()).orElse(null);
+
+        if(existingUser != null)
+            return null;
+
         Long newId = next++;
         user.setId(newId);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.USER_ROUTING_KEY,
                 new ServiceRequest("User", "create", modelMapper.map(user, UserDto.class)));
         return newId;
     }
@@ -59,13 +68,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
-                new ServiceRequest("User", "update", user));
+        if(user.getPassword() != null) user.setPassword(passwordEncoder.encode(user.getPassword()));
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.USER_ROUTING_KEY,
+                new ServiceRequest("User", "update", modelMapper.map(user, UserDto.class)));
     }
 
     @Override
     public void deleteById(long id) {
-        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.USER_ROUTING_KEY,
                 new ServiceRequest("User", "delete", id));
     }
 }

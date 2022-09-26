@@ -22,9 +22,10 @@ public class UserController {
     }
 
     @PostMapping("")
-    public RedirectView save(@RequestBody User user) {
-        long savedUserId = userService.save(user);
-        return new RedirectView("users/" + savedUserId);
+    public Object save(@RequestBody User user) {
+        Long savedUserId = userService.save(user);
+        return savedUserId != null ? new RedirectView("users/" + savedUserId)
+                : ResponseEntity.accepted().body("Failed to create an user. User with this username already exists");
     }
 
     @GetMapping("/{id}")

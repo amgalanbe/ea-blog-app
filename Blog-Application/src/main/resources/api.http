@@ -1,3 +1,4 @@
+//-------------------------- AUTHENTICATION --------------------------
 ### Authenticate as admin
 POST http://localhost:8080/api/uaa/login
 Content-Type: application/json
@@ -7,7 +8,7 @@ Content-Type: application/json
   "password": "admin"
 }
 
-> {% client.global.set("admin_token", response.body.access_token); %}
+> {% client.global.set("admin_token", response.body.accessToken); %}
 
 ### Signup a user
 POST http://localhost:8080/api/uaa/signup
@@ -26,13 +27,14 @@ POST http://localhost:8080/api/uaa/login
 Content-Type: application/json
 
 {
-  "username": "amga",
+  "username": "john",
   "password": "123"
 }
 
-> {% client.global.set("token", response.body.access_token); %}
+> {% client.global.set("token", response.body.accessToken); %}
 
 ### Create post
+//-------------------------- POST --------------------------
 POST http://localhost:8080/api/posts/
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -53,13 +55,15 @@ GET http://localhost:8080/api/posts/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
+
+//-------------------------- USER --------------------------
 ### Create a user
 POST http://localhost:8080/api/users
 Content-Type: application/json
 Authorization: Bearer {{admin_token}}
 
 {
-  "username": "john",
+  "username": "johny",
   "password": "123",
   "firstname": "John",
   "lastname": "Doe",
@@ -68,5 +72,20 @@ Authorization: Bearer {{admin_token}}
 
 ### Read users
 GET http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update user
+PUT http://localhost:8080/api/users/5
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "password": "123",
+  "email": "john@miu.edu"
+}
+
+### Read user by id
+GET http://localhost:8080/api/users/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
