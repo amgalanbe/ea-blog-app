@@ -6,6 +6,7 @@ import edu.miu.cs544.BlogApplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -18,6 +19,12 @@ public class UserController {
     @GetMapping("")
     public List<UserDto> getAll() {
         return userService.findAll();
+    }
+
+    @PostMapping("")
+    public RedirectView save(@RequestBody User user) {
+        long savedUserId = userService.save(user);
+        return new RedirectView("users/" + savedUserId);
     }
 
     @GetMapping("/{id}")

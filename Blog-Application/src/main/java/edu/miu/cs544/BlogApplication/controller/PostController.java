@@ -5,6 +5,8 @@ import edu.miu.cs544.BlogApplication.services.Impl.UaaServiceImpl;
 import edu.miu.cs544.BlogApplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -39,7 +41,7 @@ public class PostController {
         if(existingPost == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
 
-        if(existingPost.getUser().getId() != UaaServiceImpl.currentUser.getId())
+        if(existingPost.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
             return ResponseEntity.accepted().body("User is not authorized to update a post with Id: " + id);
 
         post.setId(id);
@@ -54,7 +56,7 @@ public class PostController {
         if(post == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
 
-        if(post.getUser().getId() != UaaServiceImpl.currentUser.getId())
+        if(post.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
             return ResponseEntity.accepted().body("User is not authorized to delete a post with Id: " + id);
 
         postService.deleteById(id);

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.List;
 @SQLDelete(sql="UPDATE users SET active=true WHERE id=?")
 public class User {
     @Id
-    @GeneratedValue
     private Long id;
     private String username;
     private String password;

@@ -9,13 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -49,7 +46,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post) {
-        post.setUser(UaaServiceImpl.currentUser);
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
                 new ServiceRequest("Post", "udpate", post));
     }

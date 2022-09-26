@@ -3,7 +3,6 @@ package edu.miu.cs544.BlogApplication.services.Impl;
 import edu.miu.cs544.BlogApplication.entity.Comment;
 import edu.miu.cs544.BlogApplication.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

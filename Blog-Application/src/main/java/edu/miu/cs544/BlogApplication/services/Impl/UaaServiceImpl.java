@@ -26,8 +26,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Slf4j
 public class UaaServiceImpl implements UaaService {
-
-    public static User currentUser = null;
     @Autowired
     private final AuthenticationManager authenticationManager;
     @Autowired
@@ -63,8 +61,7 @@ public class UaaServiceImpl implements UaaService {
 
         if(existingUser != null)
             return new SignupResponse("User with this username already exists", null) ;
-
-        UaaServiceImpl.currentUser = user;
+        user.setId(UserServiceImpl.next++);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Arrays.asList(roleDAO.findByRole("USER")));
         userDAO.save(user);

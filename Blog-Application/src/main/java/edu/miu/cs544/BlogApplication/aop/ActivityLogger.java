@@ -33,4 +33,3 @@ public class ActivityLogger {
         return object;
     }
 }
-}

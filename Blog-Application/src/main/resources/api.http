@@ -52,3 +52,21 @@ Content-Type: application/json
 GET http://localhost:8080/api/posts/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
+
+### Create a user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "username": "john",
+  "password": "123",
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "john.doe@miu.edu"
+}
+
+### Read users
+GET http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}

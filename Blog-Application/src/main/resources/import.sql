@@ -1,7 +1,7 @@
-INSERT INTO users (is_active, email, firstname, lastname, `password`, username) VALUES (true, 'admin@miu.edu', 'Admin', 'Admin', '$2a$10$qm5X9EQgr53QiFIEneWdw..ozeXgT72YGobjd5kDwl.COnxHD6QvW', 'admin'); #admin
-INSERT INTO users (is_active, email, firstname, lastname, `password`, username) VALUES (true, 'amgalan@miu.edu', 'Amgalan', 'Bat-Erdene', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'amga'); #123
-INSERT INTO users (is_active, email, firstname, lastname, `password`, username) VALUES (true, 'harriet@miu.edu', 'Harriet', 'Nakayenga', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'harriet'); #123
-INSERT INTO users (is_active, email, firstname, lastname, `password`, username) VALUES (true, 'dennis@miu.edu', 'Dennis', 'Nyoni', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'dennis'); #123
+INSERT INTO users (id, is_active, email, firstname, lastname, `password`, username) VALUES (1, true, 'admin@miu.edu', 'Admin', 'Admin', '$2a$10$qm5X9EQgr53QiFIEneWdw..ozeXgT72YGobjd5kDwl.COnxHD6QvW', 'admin'); #admin
+INSERT INTO users (id, is_active, email, firstname, lastname, `password`, username) VALUES (2, true, 'amgalan@miu.edu', 'Amgalan', 'Bat-Erdene', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'amga'); #123
+INSERT INTO users (id, is_active, email, firstname, lastname, `password`, username) VALUES (3, true, 'harriet@miu.edu', 'Harriet', 'Nakayenga', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'harriet'); #123
+INSERT INTO users (id, is_active, email, firstname, lastname, `password`, username) VALUES (4, true, 'dennis@miu.edu', 'Dennis', 'Nyoni', '$2a$12$IKEQb00u5QpZMx4v5zMweu.3wrq0pS7XLCHO4yHZ.BW/yvWu1feo2', 'dennis'); #123
 
 INSERT INTO role (`role`) VALUES ('ADMIN');
 INSERT INTO role (`role`) VALUES ('USER');

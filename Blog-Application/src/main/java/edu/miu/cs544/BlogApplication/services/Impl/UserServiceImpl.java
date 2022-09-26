@@ -5,13 +5,13 @@ import edu.miu.cs544.BlogApplication.dto.UserDto;
 import edu.miu.cs544.BlogApplication.entity.User;
 import edu.miu.cs544.BlogApplication.model.ServiceRequest;
 import edu.miu.cs544.BlogApplication.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final String user_url = "http://localhost:8083/users";
+    public static long next = 5;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -29,6 +30,19 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public Long save(User user) {
+        Long newId = next++;
+        user.setId(newId);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.ROUTING_KEY,
+                new ServiceRequest("User", "create", modelMapper.map(user, UserDto.class)));
+        return newId;
+    }
 
     @Override
     public List<UserDto> findAll() {
