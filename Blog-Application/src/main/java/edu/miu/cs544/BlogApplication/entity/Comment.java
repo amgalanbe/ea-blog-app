@@ -1,5 +1,6 @@
 package edu.miu.cs544.BlogApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class Comment {
     @Lob
     private String body;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date publishedDate;
+    private Date creationDate;
     @ManyToOne
     private User user;
     @ManyToOne

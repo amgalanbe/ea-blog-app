@@ -27,7 +27,7 @@ POST http://localhost:8080/api/uaa/login
 Content-Type: application/json
 
 {
-  "username": "john",
+  "username": "amga",
   "password": "123"
 }
 
@@ -89,3 +89,29 @@ Authorization: Bearer {{token}}
 GET http://localhost:8080/api/users/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+//-------------------------- COMMENT --------------------------
+### Create comment
+POST http://localhost:8080/api/comments/post/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "body": "When you design and build applications at scale, you deal with two significant challenges: scalability and robustness. You should design your service so that even if it is subject to intermittent heavy loads, it continues to operate reliably. Take the Apple Store as an example. Every year millions of Apple customers preregister to buy a new iPhone. That’s millions of people all buying an item at the same time. If you were to picture the Apple store’s traffic as requests per second over time, this is what the graph could look like: "
+}
+
+### Get all comments
+GET http://localhost:8080/api/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+### Get comment by Id
+GET http://localhost:8080/api/comments/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Delete comment by Id
+DELETE http://localhost:8080/api/comments/2
+Authorization: Bearer {{token}}
+Content-Type: application/json

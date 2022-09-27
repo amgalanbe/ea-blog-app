@@ -27,8 +27,10 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
     private List<Role> roles;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Comment> comments;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Post> posts;
 }

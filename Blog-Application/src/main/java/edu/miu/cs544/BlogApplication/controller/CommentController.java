@@ -1,7 +1,9 @@
 package edu.miu.cs544.BlogApplication.controller;
 
+import edu.miu.cs544.BlogApplication.dto.CommentDto;
 import edu.miu.cs544.BlogApplication.entity.Comment;
 import edu.miu.cs544.BlogApplication.services.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,20 +19,27 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("")
-    public RedirectView save(@RequestBody Comment comment) {
-        long savedCommentId = commentService.save(comment);
-        return new RedirectView("api/comments/" + savedCommentId);
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @PostMapping("/post/{id}")
+    public Object save(@RequestBody Comment comment, @PathVariable long id) {
+        Long savedCommentId = commentService.save(comment, id);
+        return savedCommentId != null ? new RedirectView("/api/comments/" + savedCommentId)
+                : ResponseEntity.accepted().body("Failed to create a comment. Comment with this id does not exists");
     }
 
     @GetMapping("")
-    public List<Comment> getAll() {
+    public List<CommentDto> getAll() {
         return commentService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Comment getById(@PathVariable long id) {
-        return commentService.findById(id);
+    public ResponseEntity<?> getById(@PathVariable long id) {
+        Comment comment = commentService.findById(id);
+        if(comment != null)
+            return ResponseEntity.accepted().body(modelMapper.map(comment, CommentDto.class));
+        return ResponseEntity.accepted().body("Comment with id " + id + " does not exists");
     }
 
     @PutMapping("/{id}")
@@ -41,19 +50,19 @@ public class CommentController {
             return ResponseEntity.accepted().body("Comment with Id: " + id + " does not exist.");
 
         if(existingComment.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
-            return ResponseEntity.accepted().body("User is not authorized to update a post with Id: " + id);
+            return ResponseEntity.accepted().body("User is not authorized to update a comment with Id: " + id);
 
         comment.setId(id);
         commentService.update(comment);
 //        return new RedirectView("api/posts/" + id);
-        return ResponseEntity.accepted().body("Post has successfully updated");
+        return ResponseEntity.accepted().body("Comment has successfully updated");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
         Comment comment = commentService.findById(id);
         if(comment == null)
-            return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
+            return ResponseEntity.accepted().body("Comment with Id: " + id + " does not exist.");
 
         if(comment.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
             return ResponseEntity.accepted().body("User is not authorized to delete a post with Id: " + id);
