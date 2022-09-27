@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void update(Comment comment) {
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.COMMENT_ROUTING_KEY,
-                new ServiceRequest("Comment", "udpate", modelMapper.map(comment, CommentDto.class)));
+                new ServiceRequest("Comment", "update", modelMapper.map(comment, CommentDto.class)));
     }
 
     @Override

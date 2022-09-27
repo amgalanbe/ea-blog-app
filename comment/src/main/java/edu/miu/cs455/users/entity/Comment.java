@@ -15,15 +15,12 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class Comment implements Serializable{
+public class Comment{
     @Id
     private Long id;
     @Lob
     private String body;
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private Date creationDate;
     @ManyToOne
     private User user;

@@ -32,8 +32,8 @@ public class CommentController {
     }
 
     @PutMapping("/comments/update")
-    public Comment updateComment(@RequestBody Comment comment){
-        return commentService.update(comment);
+    public void updateComment(@RequestBody Comment comment){
+        commentService.update(comment);
     }
 
     @DeleteMapping("/comments/delete/{id}")

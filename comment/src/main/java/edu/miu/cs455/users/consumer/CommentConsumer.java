@@ -39,8 +39,8 @@ public class CommentConsumer {
             System.out.println("Message received from queue : "+serviceRequest.getAction());
         }
         else if(serviceRequest.getAction().equals("delete")){
-            Comment comment = om.convertValue(serviceRequest.getObject(), new TypeReference<Comment>() { });
-            commentService.deleteById(comment.getId());
+            Long commentId = om.convertValue(serviceRequest.getObject(), new TypeReference<Long>() { });
+            commentService.deleteById(commentId);
         }
 
         System.out.println("Message received from queue : "+serviceRequest);

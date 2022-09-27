@@ -1,0 +1,34 @@
+version: '3'
+services:
+  rabbit-mq: 
+    image: 'rabbitmq:3.9-management'
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  mysql-db:
+    image: mysql
+    container_name: mysql-db
+    restart: always
+    ports: 
+      - 3306:3306
+    environment:
+      MYSQL_DB: blog_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+  blog-application:
+    container_name: blog-application
+    build: 
+      context: ./Blog-Application
+      dockerfile: ./Dockerfile
+    ports: 
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/blog_db
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service
+      dockerfile: ./Dockerfile
+    ports:
+      - 8083:8083

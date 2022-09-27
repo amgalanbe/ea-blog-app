@@ -49,7 +49,7 @@ public class CommentController {
         if(existingComment == null)
             return ResponseEntity.accepted().body("Comment with Id: " + id + " does not exist.");
 
-        if(existingComment.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+        if(existingComment.getUser().getUsername().compareTo(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()) != 0)
             return ResponseEntity.accepted().body("User is not authorized to update a comment with Id: " + id);
 
         comment.setId(id);
@@ -63,12 +63,11 @@ public class CommentController {
         Comment comment = commentService.findById(id);
         if(comment == null)
             return ResponseEntity.accepted().body("Comment with Id: " + id + " does not exist.");
-
-        if(comment.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+        if(comment.getUser().getUsername().compareTo(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()) != 0)
             return ResponseEntity.accepted().body("User is not authorized to delete a post with Id: " + id);
 
         commentService.deleteById(id);
-        return ResponseEntity.accepted().body("Post has successfully deleted");
+        return ResponseEntity.accepted().body("Comment with id " + id + " has successfully deleted");
     }
 
 }

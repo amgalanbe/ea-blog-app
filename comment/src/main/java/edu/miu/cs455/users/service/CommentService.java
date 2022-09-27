@@ -47,12 +47,12 @@ public class CommentService {
         return null;
     }
 
-    public Comment update(Comment comment){
+    public void update(Comment comment){
         Comment updatingComment = commentDAO.findById(comment.getId()).orElse(null);
         if(updatingComment != null) {
             if(comment.getBody() != null) updatingComment.setBody(comment.getBody());
+            commentDAO.save(updatingComment);
         }
-        return commentDAO.save(updatingComment);
     }
 
     public void deleteById(long id){
