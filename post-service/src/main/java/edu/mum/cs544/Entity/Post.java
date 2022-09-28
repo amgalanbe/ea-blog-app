@@ -1,9 +1,10 @@
-package edu.miu.cs544.BlogApplication.entity;
+package edu.mum.cs544.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "posts")
 public class Post {
     @Id
@@ -21,10 +23,10 @@ public class Post {
     private String title;
     @Lob
     private String body;
-    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-    @OneToMany(mappedBy = "post")
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private Collection<Comment> comments;
     @ManyToOne
     private User user;

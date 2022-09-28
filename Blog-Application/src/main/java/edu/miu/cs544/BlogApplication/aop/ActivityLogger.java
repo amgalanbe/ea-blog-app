@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.time.Instant;
 
 @Aspect
@@ -22,10 +23,11 @@ public class ActivityLogger {
 
     @Around("trigger()")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+        ActivityLog activityLog = new ActivityLog();
+        activityLog.setExecutedAt(Date.from(Instant.now()));
         Instant startedAt = Instant.now();
         Object object = joinPoint.proceed();
         Instant endedAt = Instant.now();
-        ActivityLog activityLog = new ActivityLog();
         activityLog.setClassName(joinPoint.getTarget().getClass().getSimpleName());
         activityLog.setMethodName(joinPoint.getSignature().getName());
         activityLog.setExecutedTime(endedAt.toEpochMilli() - startedAt.getEpochSecond());

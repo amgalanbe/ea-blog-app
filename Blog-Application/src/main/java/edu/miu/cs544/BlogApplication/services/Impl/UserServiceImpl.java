@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(long id) {
         User user = restTemplate.getForObject(user_url + "/{id}", User.class, id);
-        return modelMapper.map(user, UserDto.class);
+        return user != null ? modelMapper.map(user, UserDto.class) : null;
     }
 
     @Override

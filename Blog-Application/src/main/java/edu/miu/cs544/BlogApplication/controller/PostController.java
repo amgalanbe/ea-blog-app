@@ -1,8 +1,11 @@
 package edu.miu.cs544.BlogApplication.controller;
 
+import edu.miu.cs544.BlogApplication.dto.CommentDto;
+import edu.miu.cs544.BlogApplication.dto.PostDto;
 import edu.miu.cs544.BlogApplication.entity.Post;
 import edu.miu.cs544.BlogApplication.services.Impl.UaaServiceImpl;
 import edu.miu.cs544.BlogApplication.services.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,20 +21,32 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @PostMapping("")
-    public RedirectView save(@RequestBody Post post) {
-        long savedPostId = postService.save(post);
-        return new RedirectView("api/posts/" + savedPostId);
+    public Object save(@RequestBody Post post) {
+        Long savedPostId = postService.save(post);
+        return savedPostId != null ? new RedirectView("/api/posts/" + savedPostId)
+                : ResponseEntity.accepted().body("Failed to create a post. Post with this id does not exists");
     }
 
     @GetMapping("")
-    public List<Post> getAll() {
+    public List<PostDto> getAll() {
         return postService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Post getById(@PathVariable long id) {
-        return postService.findById(id);
+    public ResponseEntity<?> getById(@PathVariable long id) {
+        Post post = postService.findById(id);
+        if(post != null)
+            return ResponseEntity.accepted().body(modelMapper.map(post, PostDto.class));
+        return ResponseEntity.accepted().body("Post with id " + id + " does not exists");
+    }
+
+    @GetMapping("/user/{username}")
+    public List<PostDto> getById(@PathVariable String username) {
+        return postService.findAllByUsername(username);
     }
 
     @PutMapping("/{id}")
@@ -41,12 +56,11 @@ public class PostController {
         if(existingPost == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
 
-        if(existingPost.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+        if(existingPost.getUser().getUsername().compareTo(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()) != 0)
             return ResponseEntity.accepted().body("User is not authorized to update a post with Id: " + id);
 
         post.setId(id);
         postService.update(post);
-//        return new RedirectView("api/posts/" + id);
         return ResponseEntity.accepted().body("Post has successfully updated");
     }
 
@@ -56,10 +70,10 @@ public class PostController {
         if(post == null)
             return ResponseEntity.accepted().body("Post with Id: " + id + " does not exist.");
 
-        if(post.getUser().getUsername() != ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+        if(post.getUser().getUsername().compareTo(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()) != 0)
             return ResponseEntity.accepted().body("User is not authorized to delete a post with Id: " + id);
 
         postService.deleteById(id);
-        return ResponseEntity.accepted().body("Post has successfully deleted");
+        return ResponseEntity.accepted().body("Post with id " + id + " has successfully deleted");
     }
 }

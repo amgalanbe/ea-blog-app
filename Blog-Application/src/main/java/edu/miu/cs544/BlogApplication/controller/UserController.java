@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping("")
     public Object save(@RequestBody User user) {
         Long savedUserId = userService.save(user);
-        return savedUserId != null ? new RedirectView("users/" + savedUserId)
+        return savedUserId != null ? new RedirectView("/api/users/" + savedUserId)
                 : ResponseEntity.accepted().body("Failed to create an user. User with this username already exists");
     }
 

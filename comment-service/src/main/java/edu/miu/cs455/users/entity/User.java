@@ -17,7 +17,6 @@ import java.util.List;
 @SQLDelete(sql="UPDATE users SET active=true WHERE id=?")
 public class User {
     @Id
-    @GeneratedValue
     private Long id;
     private String username;
     private String password;

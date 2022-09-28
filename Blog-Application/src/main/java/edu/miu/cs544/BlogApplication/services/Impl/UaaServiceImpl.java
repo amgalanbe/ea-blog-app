@@ -43,6 +43,11 @@ public class UaaServiceImpl implements UaaService {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         try {
+            User user = userDAO.findByUsername(loginRequest.getUsername()).orElse(null);
+            if(user != null && !user.is_active()) {
+                return null;
+            }
+
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
             Authentication result = authenticationManager.authenticate(authenticationToken);
@@ -63,7 +68,7 @@ public class UaaServiceImpl implements UaaService {
             return new SignupResponse("User with this username already exists", null) ;
         user.setId(UserServiceImpl.next++);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList(roleDAO.findByRole("USER")));
+        user.setRoles(Arrays.asList(roleDAO.findByRole("READER")));
         userDAO.save(user);
 
         return new SignupResponse("Successfully signed up", modelMapper.map(user, UserDto.class));

@@ -1,9 +1,11 @@
 package edu.miu.cs544.BlogApplication.services.Impl;
 
 import edu.miu.cs544.BlogApplication.config.MessagingConfig;
+import edu.miu.cs544.BlogApplication.dto.PostDto;
 import edu.miu.cs544.BlogApplication.entity.Post;
 import edu.miu.cs544.BlogApplication.model.ServiceRequest;
 import edu.miu.cs544.BlogApplication.services.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -21,6 +24,10 @@ public class PostServiceImpl implements PostService {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     private long next = 6;
     private final String post_url = "http://localhost:8081/posts";
     @Override
@@ -33,9 +40,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findAll() {
+    public List<PostDto> findAll() {
         ResponseEntity<List<Post>> response = restTemplate.exchange(post_url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Post>>() {});
-        return response.getBody();
+        List<Post> posts = response.getBody();
+        return posts.stream().map(p -> modelMapper.map(p, PostDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostDto> findAllByUsername(String username) {
+        ResponseEntity<List<Post>> response = restTemplate.exchange(post_url + "/user/" + username, HttpMethod.GET, null, new ParameterizedTypeReference<List<Post>>() {});
+        List<Post> posts = response.getBody();
+        return posts.stream().map(p -> modelMapper.map(p, PostDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -47,7 +62,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void update(Post post) {
         rabbitTemplate.convertAndSend(MessagingConfig.EXCHANGE, MessagingConfig.POST_ROUTING_KEY,
-                new ServiceRequest("Post", "udpate", post));
+                new ServiceRequest("Post", "update", post));
     }
 
     @Override

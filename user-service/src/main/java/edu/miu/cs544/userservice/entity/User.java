@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-@SQLDelete(sql="UPDATE users SET active=true WHERE id=?")
+@SQLDelete(sql="UPDATE users SET is_active=false WHERE id=?")
 public class User {
     @Id
     private Long id;

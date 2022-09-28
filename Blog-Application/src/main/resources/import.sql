@@ -5,11 +5,12 @@ INSERT INTO users (id, is_active, email, firstname, lastname, `password`, userna
 
 INSERT INTO role (`role`) VALUES ('ADMIN');
 INSERT INTO role (`role`) VALUES ('USER');
+INSERT INTO role (`role`) VALUES ('READER');
 
-INSERT INTO users_roles (user_id, roles_id) VALUES (1, 2);
-INSERT INTO users_roles (user_id, roles_id) VALUES (2, 1);
-INSERT INTO users_roles (user_id, roles_id) VALUES (3, 1);
-INSERT INTO users_roles (user_id, roles_id) VALUES (4, 1);
+INSERT INTO users_roles (user_id, roles_id) VALUES (1, 1);
+INSERT INTO users_roles (user_id, roles_id) VALUES (2, 2);
+INSERT INTO users_roles (user_id, roles_id) VALUES (3, 2);
+INSERT INTO users_roles (user_id, roles_id) VALUES (4, 3);
 
 INSERT INTO posts (id, body, creation_date, title, user_id) VALUES (1, 'What happens when a dog gets bitten by a black widow spider, and what can you do about it?', '2021-11-27 12:52:01', 'Black Widow Bites in Dogs', 3);
 INSERT INTO posts (id, body, creation_date, title, user_id) VALUES (2, 'In this article we’ll discuss the questions you should ask when adopting a puppy or dog, and help you make the best decision on your future furry friend!', '2021-11-28 11:52:01', 'Quick Health Tips & Questions for Dog and Puppy Adoption', 4);

@@ -60,8 +60,9 @@ public class UserServiceImpl implements UserService {
     public void deleteById(long id) {
         User user = userDAO.findById(id).orElse(null);
         if (user != null) {
-            user.set_active(false);
-            update(user);
+//            user.set_active(false);
+//            update(user);
+            userDAO.deleteById(id);
         }
     }
 }

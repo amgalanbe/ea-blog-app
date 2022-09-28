@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,8 +20,8 @@ public class ActivityLog {
     private String className;
     private String methodName;
     private Long executedTime;
-    @CreatedDate
-    private Instant executedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date executedAt;
     @CreatedBy
     private String executedBy;
 }

@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/uaa/**").permitAll()
                     .antMatchers("/api/users/**").hasAnyAuthority("USER", "ADMIN")
                     .antMatchers("/api/posts/**").hasAnyAuthority("USER", "ADMIN")
-                    .antMatchers("/api/comments/**").hasAnyAuthority("USER", "ADMIN")
+                    .antMatchers("/api/comments/**").hasAnyAuthority("READER", "USER", "ADMIN")
                     .antMatchers("/api/**").hasAuthority("ADMIN")
                 .anyRequest()
                     .authenticated()
